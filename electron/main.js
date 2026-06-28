@@ -7,14 +7,46 @@ import net from 'node:net';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Load environment variables from .env
+// Parse --config parameter
+let configPath = '/etc/weather-forecast/api.conf';
+for (let i = 0; i < process.argv.length; i++) {
+  const arg = process.argv[i];
+  if (arg === '--config' && process.argv[i + 1]) {
+    configPath = process.argv[i + 1];
+    break;
+  } else if (arg.startsWith('--config=')) {
+    configPath = arg.substring('--config='.length);
+    break;
+  }
+}
+
+// Load configuration
+let loaded = false;
 try {
-  const envPath = path.resolve(__dirname, '../.env');
-  if (fs.existsSync(envPath)) {
-    process.loadEnvFile(envPath);
+  if (fs.existsSync(configPath)) {
+    console.log(`Loading config from: ${configPath}`);
+    process.loadEnvFile(configPath);
+    loaded = true;
+  } else {
+    console.warn(`Config file not found at: ${configPath}`);
   }
 } catch (e) {
-  console.warn('Could not load .env file:', e);
+  console.error(`Failed to load config from ${configPath}:`, e);
+}
+
+// Fallback to local .env if no config was loaded
+if (!loaded) {
+  try {
+    const localEnvPath = path.resolve(__dirname, '../.env');
+    if (fs.existsSync(localEnvPath)) {
+      console.log(`Falling back to local env file: ${localEnvPath}`);
+      process.loadEnvFile(localEnvPath);
+    } else {
+      console.warn(`No local env file found at: ${localEnvPath}`);
+    }
+  } catch (e) {
+    console.warn('Failed to load fallback local env file:', e);
+  }
 }
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -79,7 +111,8 @@ async function startServer() {
     ], {
       stdio: 'inherit',
       shell: true,
-      cwd: path.resolve(__dirname, '..')
+      cwd: path.resolve(__dirname, '..'),
+      env: process.env
     });
 
     devServerProcess.on('close', (code) => {

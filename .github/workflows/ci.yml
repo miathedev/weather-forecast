@@ -30,24 +30,24 @@ jobs:
       - name: Build App
         run: npm run build
 
-      - name: Package Electron App (Dry Run)
-        run: npx electron-builder --dir
-
-      - name: Build actual Linux deb and AppImage Installers (non-tag builds)
-        if: matrix.os == 'ubuntu-latest' && !startsWith(github.ref, 'refs/tags/v')
-        run: npx electron-builder --linux
-
-      - name: Upload Linux Installers as Build Artifacts
-        if: matrix.os == 'ubuntu-latest' && !startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-installers
-          path: |
-            dist-electron/*.deb
-            dist-electron/*.AppImage
-
-      - name: Publish Release Binaries
+      - name: Build & Package Electron App (Release Publish)
         if: startsWith(github.ref, 'refs/tags/v')
         run: npx electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Package Electron App (Local Package Only)
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: npx electron-builder --publish never
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: installers-${{ matrix.os }}
+          path: |
+            dist-electron/*.deb
+            dist-electron/*.AppImage
+            dist-electron/*.exe
+            dist-electron/*.dmg
+            dist-electron/*.zip
+          if-no-files-found: ignore

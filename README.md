@@ -27,39 +27,60 @@ The project is built for a Raspberry Pi 5" screen. It includes a custom 3d-print
 
 ## How to setup:
 
-1.  Clone the repository
-
+1. Clone the repository:
 ```shell
 git clone https://github.com/infinitel8p/weather-forecast.git
 ```
-2. Navigate into the project directory
 
+2. Navigate into the project directory:
 ```shell
 cd weather-forecast
 ```
 
-3. Setup the environment variables in `.env` file
-   - `OPENWEATHERMAP_API_KEY` — Your OpenWeatherMap API key (used for all weather data and geocoding)
-   - `OPENWEATHERMAP_API_VERSION` — The API tier to use:
-     - `3.0` (default) — [One Call API 3.0](https://openweathermap.org/api/one-call-3) (paid subscription)
-     - `2.5` — [One Call API 2.5](https://openweathermap.org/api/one-call-api) (legacy paid subscription)
-     - `free` — Free tier using the standard [Weather](https://openweathermap.org/current) + [Forecast](https://openweathermap.org/forecast5) endpoints (no UV index, 3-hour forecast intervals instead of hourly)
-   - `LANGUAGE` — UI language: `en` (default) for English or `de` for German. Also affects weather descriptions from the API and date/time formatting.
+3. Install the dependencies:
+```shell
+npm install --legacy-peer-deps
+```
+
+4. Configure the Application:
+By default, the Electron application loads its configuration from `/etc/weather-forecast/api.conf`. If that file does not exist, it falls back to a local `.env` file in the root directory.
+
+Create the configuration file with the following variables:
+- `OPENWEATHERMAP_API_KEY` — Your OpenWeatherMap API key (used for all weather data and geocoding)
+- `OPENWEATHERMAP_API_VERSION` — The API tier to use:
+  - `3.0` (default) — [One Call API 3.0](https://openweathermap.org/api/one-call-3) (paid subscription)
+  - `2.5` — [One Call API 2.5](https://openweathermap.org/api/one-call-api) (legacy paid subscription)
+  - `free` — Free tier using the standard [Weather](https://openweathermap.org/current) + [Forecast](https://openweathermap.org/forecast5) endpoints (no UV index, 3-hour forecast intervals instead of hourly)
+- `LANGUAGE` — UI language: `en` (default) for English or `de` for German.
 
 > [!Note]
-> Choose the API version based on your OpenWeatherMap subscription. The `free` option allows you to run the dashboard without a paid subscription, but with limited features and less granular forecast data.
+> Choose the API version based on your OpenWeatherMap subscription. The `free` option allows you to run the dashboard without a paid subscription, but with limited features.
 
-4. Install the dependencies
-
+To override the default config location, use the `--config` parameter:
 ```shell
-npm install
+# For development
+npm run electron:dev -- --config /path/to/your/custom.conf
+
+# For the packaged binary
+./dist-electron/linux-unpacked/weather-forecast --config /path/to/your/custom.conf
 ```
 
-5. Start the development server
+5. Run the Desktop Application:
+- **Development Mode (with HMR):**
+  ```shell
+  npm run electron:dev
+  ```
+- **Production Mode (local test):**
+  ```shell
+  npm start
+  ```
 
+## Building and Packaging:
+To build and package the application into standalone `.deb` and `.AppImage` installers for both **amd64 (x64)** and **arm64** Linux architectures:
 ```shell
-npm run dev
+npm run electron:build
 ```
+The compiled binaries will be outputted to the `dist-electron/` folder.
 
 ## High-contrast mode
 
