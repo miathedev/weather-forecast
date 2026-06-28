@@ -63,6 +63,17 @@ Create the configuration file with the following variables:
 > [!Note]
 > Choose the API version based on your OpenWeatherMap subscription. The `free` option allows you to run the dashboard without a paid subscription, but with limited features.
 
+### Example `api.conf` File:
+```env
+# OpenWeatherMap API Settings
+OPENWEATHERMAP_API_KEY=your_api_key_here
+OPENWEATHERMAP_API_VERSION=3.0
+
+# UI Settings
+LANGUAGE=en
+HIGH_CONTRAST=false
+```
+
 To override the default config location, use the `--config` parameter:
 ```shell
 # For development
@@ -91,14 +102,21 @@ The compiled binaries will be outputted to the `dist-electron/` folder.
 
 ## High-contrast mode
 
-For small or low-quality screens (like the Raspberry Pi 5" touchscreen), a high-contrast variant of the day theme is available. Append `?hc` to the URL to activate it:
+For small or low-quality screens (like the Raspberry Pi 5" touchscreen), a high-contrast variant of the day theme is available. This increases text contrast, makes cards more opaque, deepens borders, and strengthens the geometric background elements for better readability. The night theme is unaffected.
 
-```
-http://localhost:4321/?hc
-http://localhost:4321/setup?hc
-```
+In the Electron desktop app, you can enable high-contrast mode in two ways:
+1. **Config/Environment variable:** Add `HIGH_CONTRAST=true` to your configuration file (e.g. `/etc/weather-forecast/api.conf` or local `.env`).
+2. **Command line parameters:** Pass `--high-contrast` or `--hc` when executing the application:
+   - For development:
+     ```shell
+     npm run electron:dev -- --high-contrast
+     ```
+   - For the packaged binary:
+     ```shell
+     ./dist-electron/linux-unpacked/weather-forecast --hc
+     ```
 
-This increases text contrast, makes cards more opaque, deepens borders, and strengthens the geometric background elements for better readability. The night theme is unaffected.
+*(In a standard browser, you can still activate it by appending `?hc` to the URL).*
 
 ## 3D-printed case
 ![WhatsApp Image 2025-05-21 at 07 21 03](https://github.com/user-attachments/assets/b5b318ca-4eb3-44ab-b2b0-eb1675a0d4fa)

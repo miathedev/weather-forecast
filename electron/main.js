@@ -139,6 +139,8 @@ async function startServer() {
 }
 
 function createWindow(url) {
+  const hcEnabled = process.env.HIGH_CONTRAST === 'true' || process.argv.includes('--high-contrast') || process.argv.includes('--hc');
+
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -151,7 +153,34 @@ function createWindow(url) {
     }
   });
 
-  mainWindow.loadURL(url);
+  if (hcEnabled) {
+    mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+      try {
+        const urlObj = new URL(details.url);
+        if (details.resourceType === 'mainFrame' && (urlObj.hostname === '127.0.0.1' || urlObj.hostname === 'localhost') && !urlObj.searchParams.has('hc')) {
+          urlObj.searchParams.set('hc', 'true');
+          callback({ redirectURL: urlObj.toString() });
+          return;
+        }
+      } catch (err) {
+        console.error('Error parsing URL in webRequest:', err);
+      }
+      callback({});
+    });
+  }
+
+  let targetUrl = url;
+  if (hcEnabled) {
+    try {
+      const urlObj = new URL(url);
+      urlObj.searchParams.set('hc', 'true');
+      targetUrl = urlObj.toString();
+    } catch (err) {
+      console.error('Error formatting target URL:', err);
+    }
+  }
+
+  mainWindow.loadURL(targetUrl);
 
   mainWindow.on('closed', () => {
     mainWindow = null;
