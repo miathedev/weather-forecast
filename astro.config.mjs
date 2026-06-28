@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 import react from "@astrojs/react";
 
-import netlify from "@astrojs/netlify";
+import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
@@ -21,5 +21,7 @@ export default defineConfig({
   output: 'server',
   devToolbar: { enabled: false },
   integrations: [react()],
-  adapter: netlify(),
+  adapter: node({
+    mode: "standalone"
+  }),
 });
