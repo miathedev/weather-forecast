@@ -20,10 +20,17 @@ The project is built for a Raspberry Pi 5" screen. It includes a custom 3d-print
 #### Contents:
 - [weather-forecast](#weather-forecast)
       - [Contents:](#contents)
+  - [Downloads](#downloads)
   - [How to setup:](#how-to-setup)
   - [High-contrast mode](#high-contrast-mode)
   - [3D-printed case](#3d-printed-case)
   - [Hardware](#hardware)
+
+## Downloads
+
+You can download the pre-compiled desktop application packages (including `.deb` and `.AppImage` files for both `amd64` and `arm64` Linux architectures, plus Windows/macOS builds) from:
+- 🚀 **[GitHub Releases (Latest Stable Releases)](https://github.com/infinitel8p/weather-forecast/releases/latest)**
+- 🛠️ **[GitHub Actions (Latest Development Builds & Artifacts)](https://github.com/infinitel8p/weather-forecast/actions)**
 
 ## How to setup:
 

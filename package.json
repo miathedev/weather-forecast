@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "description": "Celestial, oceanic, and mythological weather dashboard inspired by Da Vinci.",
   "author": "Weather Forecast Team <info@weatherforecast.com>",
+  "desktopName": "WeatherForecast.desktop",
   "main": "electron/main.js",
   "scripts": {
     "dev": "node -e \"process.argv = [process.argv[0], 'node_modules/astro/bin/astro.mjs', ...process.argv.slice(1)]; Object.defineProperty(process.versions, 'node', { value: '22.12.0' }); import('./node_modules/astro/bin/astro.mjs')\" -- dev --host",
@@ -49,6 +50,8 @@
     ],
     "asar": false,
     "linux": {
+      "category": "Utility",
+      "syncDesktopName": true,
       "target": [
         {
           "target": "deb",
