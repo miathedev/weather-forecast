@@ -100,11 +100,8 @@ function findFreePort(startPort) {
 async function startServer() {
   if (isDev) {
     console.log('Starting Astro dev server...');
-    // Spawn Astro dev server using the Node version bypass
     devServerProcess = spawn('node', [
-      '-e',
-      "process.argv = [process.argv[0], 'node_modules/astro/bin/astro.mjs', ...process.argv.slice(1)]; Object.defineProperty(process.versions, 'node', { value: '22.12.0' }); import('./node_modules/astro/bin/astro.mjs')",
-      '--',
+      'node_modules/astro/bin/astro.mjs',
       'dev',
       '--port',
       '4321'
